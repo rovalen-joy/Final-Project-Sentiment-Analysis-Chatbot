@@ -8,7 +8,9 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController _controller = TextEditingController();
-  List<Message> messages = [];
+  List<Message> messages = [
+    new Message(sender: "bot", content: "Hi! I'm Sentinelle, your sentimental analyzer chatbot. Please enter a sentence with no less than 250 characters."),
+  ];
 
   void sendMessage() {
     // Function that handles sending of messages

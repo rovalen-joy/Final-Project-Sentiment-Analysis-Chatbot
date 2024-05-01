@@ -1,12 +1,9 @@
-/*
-To be modified:
-
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../class/message.dart';
 
-const api_url = '192.168.1.100:5000';
+const api_url = '192.168.1.21:5000';
 const msg_api = 'input';
 
 Future<Message> sendMessage(String input) async {
@@ -23,4 +20,4 @@ Future<Message> sendMessage(String input) async {
   print(response.body);
   var parsed = jsonDecode(response.body);
   return Message.fromJson(parsed);
-} */
+} 

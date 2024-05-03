@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../class/message.dart';
+import 'package:flutter/widgets.dart';
+import '../api handler/api.dart';
 
 class MessageScreen extends StatefulWidget {
   @override
@@ -9,29 +11,55 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Message> messages = [
-    new Message(sender: "bot", content: "Hi! I'm Sentinelle, your sentimental analyzer chatbot. Please enter a sentence with no less than 250 characters."),
+    new Message(
+        sender: "bot",
+        content:
+            "Hi! I'm Sentinelle, your sentimental analyzer chatbot. Please enter a sentence with no less than 250 characters."),
   ];
 
-  void sendMessage() {
-    // Function that handles sending of messages
+  void handleSendMessage() async {
+    // Trim leading and trailing white spaces from the text entered in the text field
     String trimmedText = _controller.text.trim();
 
-//Error Dialogs
+    // Check if the trimmed text is empty
     if (trimmedText.isEmpty) {
-      // Check if the text is empty and shows and error if true
+      // Show an error dialog if no text is entered
       showErrorDialog("Please enter at least one non-space character.");
-    } else if (trimmedText.length > 250) {
-      // Check if the text exceeds 250 chars and shows an error if true
+    }
+    // Check if the trimmed text length exceeds 250 characters
+    else if (trimmedText.length > 250) {
+      // Show an error dialog if the text exceeds 250 characters
       showErrorDialog("The message cannot exceed 250 characters.");
-    } else if (!containsValidCharacters(trimmedText)) {
-      //Check if the userinputs a text and not punctuation alone
+    }
+    // Check if the trimmed text contains valid characters
+    else if (!containsValidCharacters(trimmedText)) {
+      // Show an error dialog if the text does not contain valid characters
       showErrorDialog(
           "Please enter a real word. Punctuation alone is not allowed.");
-    } else {
-      setState(() {
-        messages.insert(0, Message(sender: "me", content: trimmedText));
-        _controller.clear(); // Clearing the text field after user enter a texts
-      });
+    }
+    // Proceed if it passes the validations
+    else {
+      try {
+        // Add the user's message to the list of messages, displaying it in the UI
+        setState(() {
+          messages.insert(0, Message(sender: "me", content: trimmedText));
+        });
+
+        // Send the trimmed text to the backend and await the response
+        Message response = await sendMessage(trimmedText);
+
+        // Add the response from the backend to the list of messages, displaying it in the UI
+        setState(() {
+          messages.insert(0, response);
+          // Clear the text field to ready it for new input
+          _controller.clear();
+        });
+      }
+      // Handle any exceptions that occur during the message sending process
+      catch (e) {
+        // Show an error dialog if an exception is caught
+        showErrorDialog("Failed to send message: $e");
+      }
     }
   }
 
@@ -51,9 +79,7 @@ class _MessageScreenState extends State<MessageScreen> {
           actions: <Widget>[
             TextButton(
               child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         );
@@ -65,28 +91,25 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[800],
-        centerTitle: true,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/logo.png',
-                height: 30), // logo image [temporary only, need pa e change]
-            Text('Chatbot Name',
-                style:
-                    TextStyle(color: Colors.white)), // Insert name of chatbot
-          ],
-        ),
-      ),
+          backgroundColor: Colors.blue[800],
+          centerTitle: true,
+          title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('assets/chatbot.png', height: 30), //logo of chatbot
+                Text('Sentinelle Chatbot',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 18)), // name of chatbot
+              ])),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
-              itemCount: messages.length, // Number of messages
+              itemCount: messages.length,
               reverse: true,
               itemBuilder: (context, index) {
-                bool isMe =
-                    messages[index].sender == "me"; // Check the message of user
+                bool isMe = messages[index].sender ==
+                    "me"; //check if the sender is 'me' or the user
                 return Align(
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -108,19 +131,15 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
-                    // textfield for the user input
                     controller: _controller,
-                    onChanged: (text) {
-                      setState(() {});
-                    },
-                    onSubmitted: (text) => sendMessage(),
                     decoration: InputDecoration(
-                      hintText: 'Enter your message',
+                      hintText:
+                          'Enter your message', // hint text shown in textfield
                       filled: true,
                       fillColor: Color.fromARGB(255, 227, 216, 216),
                       border: OutlineInputBorder(
@@ -128,18 +147,18 @@ class _MessageScreenState extends State<MessageScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       suffixText:
-                          '${_controller.text.length}/250', // Character count
+                          '${_controller.text.length}/250', //displays character count
                     ),
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType
+                        .multiline, // keyboard type for multiline input of the user
                     maxLines: 1,
                     textInputAction: TextInputAction.send,
+                    onSubmitted: (text) => handleSendMessage(),
                   ),
                 ),
-                SizedBox(width: 8),
                 IconButton(
                   icon: Icon(Icons.send, color: Colors.blue[800]),
-                  onPressed:
-                      sendMessage, // when user hit "enter" it will send the message
+                  onPressed: handleSendMessage,
                 ),
               ],
             ),

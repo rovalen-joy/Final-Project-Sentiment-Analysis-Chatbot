@@ -1,23 +1,27 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import '../class/message.dart';
 
-const api_url = '192.168.1.21:5000';
+const api_url = '192.168.1.22:5000';
 const msg_api = 'input';
 
 Future<Message> sendMessage(String input) async {
-  print("Starting api call for ${msg_api}");
-  var msg_body = {'user_input': input};
-  // create the URL for the API request
-  var url = Uri.http(
-    api_url,
-    msg_api,
-    msg_body,
-  );
-  print(url);
+  var url = Uri.http(api_url, msg_api, {'user_input': input});
   var response = await http.get(url);
-  print(response.body);
-  var parsed = jsonDecode(response.body);
-  return Message.fromJson(parsed);
-} 
+  print("Received data: ${response.body}"); // Logging response
+
+  if (response.statusCode == 200) {
+    var parsed = jsonDecode(response.body);
+    if (parsed != null &&
+        parsed is Map<String, dynamic> &&
+        parsed.containsKey('res') &&
+        parsed.containsKey('sender')) {
+      return Message.fromJson(parsed);
+    } else {
+      throw Exception('Invalid response format from the backend.');
+    }
+  } else {
+    throw Exception(
+        'Failed to load message from the backend. Status code: ${response.statusCode}');
+  }
+}

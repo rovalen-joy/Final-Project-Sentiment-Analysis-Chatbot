@@ -54,7 +54,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/logo.png
+    - assets/chatbot.png
 
 
   # The following line ensures that the Material Icons font is

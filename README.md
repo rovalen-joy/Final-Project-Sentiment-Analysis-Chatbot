@@ -12,4 +12,4 @@ Sentinelle chatbot is a sentiment analysis chatbot that utilizes natural languag
   * Villar, Angelica
  
 ## Documentation 
-[CCS_249_Sentinelle-Sentiment Analysis Chatbot](https://drive.google.com/drive/folders/1iL34HiopC8aoZAcyNdIDXlYtyGrtsVXx?usp=drive_link)
+[CCS_249_Sentinelle-Sentiment Analysis Chatbot](https://drive.google.com/file/d/1as73DVptwAyUMFV_GL3I4pAgQEMmau_l/view?usp=sharing)

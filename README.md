@@ -5,6 +5,7 @@ Sentinelle chatbot is a sentiment analysis chatbot that utilizes natural languag
  
  
 ## Members: 
+BSCS-3A AI
   * Barcelona, David Bryan 
   * Cabristante, Bethany Hope
   * Calaguing, Rovalen Joy 

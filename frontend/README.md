@@ -1,16 +1,9 @@
-# frontend
+  # Frontend Overview
+<p align="center">
+  <img src="https://github.com/rovalen-joy/Final-Project-Sentiment-Analysis-Chatbot/assets/99592635/bfe29418-b34b-4a6c-9835-f86212ed8826"/>
+</p>
+<br> 
+<p align="center">
+The frontend of Sentinelle Chatbot is a Flutter-based application that serves as the user interface for interacting with the sentiment analysis chatbot. It is responsible for displaying the chat history, handling user input, and communicating with the backend API to send messages and receive sentiment analysis results.
+</p>
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
